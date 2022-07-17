@@ -1,0 +1,47 @@
+diff --git a/docs/lib/libpq_docs.py b/docs/lib/libpq_docs.py
+index e8c82caa..e72eeb3d 100644
+--- a/docs/lib/libpq_docs.py
++++ b/docs/lib/libpq_docs.py
+@@ -112,13 +112,16 @@ class LibpqReader:
+ 
+     def download(self):
+         logger.info("downloading postgres libpq docs from %s", self.sgml_url)
+-        data = urllib.request.urlopen(self.sgml_url).read()
+-        with self.local_file.open("wb") as f:
+-            f.write(data)
++        try:
++            data = urllib.request.urlopen(self.sgml_url).read()
++            with self.local_file.open("wb") as f:
++                f.write(data)
++        except:
++            pass
+ 
+     @property
+     def local_file(self):
+-        return Path(self.app.doctreedir) / f"libpq-{self.version}.sgml"
++        return Path("@libpq_sgml@")
+ 
+     @property
+     def sgml_url(self):
+diff --git a/docs/lib/pg3_docs.py b/docs/lib/pg3_docs.py
+index 4352afbc..809abd20 100644
+--- a/docs/lib/pg3_docs.py
++++ b/docs/lib/pg3_docs.py
+@@ -93,7 +93,7 @@ def monkeypatch_autodoc():
+             return recovered_classes[self.parent]
+         return orig_attr_get_real_modname(self)
+ 
+-    def fixed_attr_add_content(self, more_content, no_docstring=False):
++    def fixed_attr_add_content(self, more_content):
+         """
+         Replace a docstring such as::
+ 
+@@ -115,7 +115,7 @@ def monkeypatch_autodoc():
+         which creates a more compact representation of a property.
+ 
+         """
+-        orig_attr_add_content(self, more_content, no_docstring)
++        orig_attr_add_content(self, more_content)
+         if not isinstance(self.object, property):
+             return
+         iret, mret = match_in_lines(r"\s*:rtype: (.*)", self.directive.result)
