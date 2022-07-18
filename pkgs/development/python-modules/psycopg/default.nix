@@ -29,13 +29,6 @@
 let
   pname = "psycopg";
   version = "3.0.15";
-
-  # Fetching and introducing this file for the docs build
-  # https://github.com/psycopg/psycopg/issues/337#issuecomment-1187091615
-  libpq_sgml = fetchurl {
-    url = "https://raw.githubusercontent.com/postgres/postgres/REL_14_STABLE/doc/src/sgml/libpq.sgml";
-    hash = "sha256-yn09fR9+7zQni8SvTG7BUmYRD7MK7u2arVAznWz2oAw=";
-  };
 in
 
 buildPythonPackage {
@@ -58,6 +51,12 @@ buildPythonPackage {
 
   sphinxRoot = "../docs";
 
+  # Introduce this file necessary for the docs build via environment var
+  LIBPQ_DOCS_FILE = fetchurl {
+    url = "https://raw.githubusercontent.com/postgres/postgres/REL_14_STABLE/doc/src/sgml/libpq.sgml";
+    hash = "sha256-yn09fR9+7zQni8SvTG7BUmYRD7MK7u2arVAznWz2oAw=";
+  };
+
   patches = [
     (substituteAll {
       src = ./libpq.patch;
@@ -66,9 +65,15 @@ buildPythonPackage {
 
     # Work around docs build issues
     # https://github.com/psycopg/psycopg/issues/337
-    (substituteAll {
-      src = ./docs.patch;
-      inherit libpq_sgml;
+    (fetchpatch {
+      name = "sphinx-5.0-compat.patch";
+      url = "https://github.com/psycopg/psycopg/commit/ebff3a8392f002100d1e71d3deb94f27fb8cc0cf.patch";
+      hash = "sha256-QP9I6/xVJyWj5MQqWqxtmdBlesNUOwpYSMuzogJSnos=";
+    })
+    (fetchpatch {
+      name = "libpq-sqml-env-var.patch";
+      url = "https://github.com/psycopg/psycopg/commit/adf9cbdc1020abf87ae602fe0eb493c294459a93.patch";
+      hash = "sha256-HJ2Cx7Vg7PSitDEOqCUF7ehNU8aI+iFT886dk2wHsAI=";
     })
     (fetchpatch {
       name = "avoid-dnspython-import-in-docs.patch";
