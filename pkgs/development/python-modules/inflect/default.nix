@@ -10,6 +10,7 @@ buildPythonPackage rec {
   pname = "inflect";
   version = "5.6.2";
   disabled = isPy27;
+  format = "pyproject";
 
   src = fetchPypi {
     inherit pname version;
