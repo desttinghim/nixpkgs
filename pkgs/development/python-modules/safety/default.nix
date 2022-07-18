@@ -53,6 +53,9 @@ buildPythonPackage rec {
     "test_announcements_if_is_not_tty"
     "test_check_live"
     "test_check_live_cached"
+    "test_check_vulnerabilities"
+    "test_license"
+    "test_chained_review"
   ];
 
   preCheck = ''
