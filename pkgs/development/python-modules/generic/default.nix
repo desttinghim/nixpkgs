@@ -2,6 +2,7 @@
 , buildPythonPackage
 , pythonOlder
 , fetchPypi
+, exceptiongroup
 , poetry-core
 }:
 
@@ -19,6 +20,10 @@ buildPythonPackage rec {
 
   nativeBuildInputs = [
     poetry-core
+  ];
+
+  propagatedBuildInputs = [
+    exceptiongroup
   ];
 
   pythonImportsCheck = [ "generic" ];
