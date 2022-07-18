@@ -30,6 +30,8 @@ buildPythonPackage rec {
     "test_guess_memoryview"
     "test_guess_extension_memoryview"
     "test_guess_mime_memoryview"
+    # https://github.com/h2non/filetype.py/issues/128
+    "test_guess_zstd"
   ];
 
   disabledTestPaths = [
