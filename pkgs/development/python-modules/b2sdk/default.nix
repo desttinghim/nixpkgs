@@ -4,6 +4,7 @@
 , fetchPypi
 , importlib-metadata
 , logfury
+, pyfakefs
 , pytestCheckHook
 , pytest-lazy-fixture
 , pytest-mock
@@ -42,6 +43,7 @@ buildPythonPackage rec {
     pytestCheckHook
     pytest-lazy-fixture
     pytest-mock
+    pyfakefs
   ];
 
   postPatch = ''
@@ -50,6 +52,11 @@ buildPythonPackage rec {
     substituteInPlace requirements.txt \
       --replace 'arrow>=0.8.0,<1.0.0' 'arrow'
   '';
+
+  disabledTestPaths = [
+    # requires aws s3 auth
+    "test/integration/test_download.py"
+  ];
 
   disabledTests = [
     # Test requires an API key
