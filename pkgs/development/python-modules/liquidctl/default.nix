@@ -16,6 +16,7 @@ buildPythonPackage rec {
   pname = "liquidctl";
   version = "1.10.0";
   disabled = pythonOlder "3.6";
+  format = "pyproject";
 
   src = fetchFromGitHub {
     owner = pname;
